@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<movies>
+  <movie>
+    <title>Star Wars - Death Star</title>
+    <genres>
+      <genre>scifi</genre>
+      <genre>space</genre>
+      <genre>future</genre>
+    </genres>
+
+    <timing_events>
+      <event type="intro_end">4.050</event>
+      <event type="action_end">5.510</event>
+      <event type="fail_start">5.51</event>
+      <event type="fail_end">15.97</event>
+      <event type="pass_start">15.97</event>
+      <event type="pass_end">20.5</event>
+    </timing_events>
+    
+    <captions>
+    </captions>
+  
+  </movie>
+
+  <movie>
+    <title>Star Wars - Trash Compactor</title>
+    <genres>
+      <genre>scifi</genre>
+      <genre>space</genre>
+      <genre>future</genre>
+    </genres>
+
+    <timing_events>
+      <event type="intro_end">4.050</event>
+      <event type="action_end">5.510</event>
+      <event type="fail_start">5.51</event>
+      <event type="fail_end">15.97</event>
+      <event type="pass_start">15.97</event>
+      <event type="pass_end">20.5</event>
+    </timing_events>
+    
+    <captions>
+    </captions>
+  
+  </movie>
+</movies>
