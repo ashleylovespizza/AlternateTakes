@@ -1,4 +1,4 @@
 AlternateTakes
 ==============
 
-Alternate Takes - laser disc videogame simulator
+an F.C.C.C. production
