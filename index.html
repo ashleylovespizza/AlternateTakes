@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ALTERNATE TAKES</title>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+  <link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
+  <script src="http://vjs.zencdn.net/c/video.js"></script>
+  <script src="/main.js" type="text/javascript"></script>
+
+
+  <style>
+    #video, #canvas {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    #main_video {
+      border: 1px red solid;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="test">
+
+<video id="main_video" class="video-js vjs-default-skin" width="720" height="480" poster="/videobg.jpg" preload="auto" data-setup="{}">
+  <source type="video/mp4" src="/video_source/testmovie/testmovie.mp4">
+  <source src="/video_source/testmovie/testmovie.webm" type='video/webm'>
+</video>
+    <a id="restart" href="#">RESTART!</a>
+    <!--
+    <canvas id="canvas" width="720" height="480"></canvas>
+-->
+  </div>
+  
+</body>
+</html>
