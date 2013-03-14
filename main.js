@@ -1,6 +1,16 @@
    // for now, just hardcode to load the testmovie
   //  var canvas, ctx, vid, vidTimer, text, myPlayer, datastr;
 
+    var canvas_id;
+    var stage;
+
+var stageWidth = 720;
+var stageHeight = 480;
+var stage;
+var update = true;
+
+  var playing = true;
+
     //video.js player
     var myPlayer;
     // datastr is the original data string imported from the text file
@@ -11,18 +21,18 @@
 
     var processed_data = new Array();
 
-      
 
 
-    $(function(){
-      // first, load up the dang video
+    $(window).load(function() {
 
-// OLD WAY:
-//      vid = document.getElementById("video");
- //       vid.play();
+      // canvas stuff
 
 
-// NEW WAY WITH VIDEO JS
+      stage = new createjs.Stage(document.getElementById("canvas"));
+ 
+
+
+      // load up the dang video
       _V_("main_video").ready(function(){
         console.log("Asdf")
         myPlayer= this;
@@ -66,14 +76,20 @@ function triggerLoad(data) {
     for (var i = 0; i<lines.length; i++) {
       // only worry about nonempty lines
       if (lines[i] != '') {
+        lines[i] = lines[i].split(/\t/);
         var new_begin_time = parseATFloat(lines[i][1]);
+    //    console.log(new_begin_time)
         lines[i][1] = new_begin_time;
 
-        var new_end_time = parseATFloat(lines[i]2]);
-        lines[i][2] = new_end_time;
 
+        var new_end_time = parseATFloat(lines[i][2]);
+        lines[i][2] = new_end_time;
+        console.log("YO")
+        console.log(lines[i])
         // push individual line array to processed data array
-        processed_data.push(lines[i].split(/\t/));
+        processed_data.push(lines[i]);
+
+        console.log(processed_data)
       }
     }
     // empty out datastring
@@ -81,32 +97,45 @@ function triggerLoad(data) {
     lines_index = 0;
 
 
-    myPlayer.addEvent("timeupdate", function(){
-      console.log(myPlayer.currentTime())
+//    myPlayer.addEvent("timeupdate", function(){
+  
+    video_interval = setInterval(loopCheck, 150);
+   //   console.log(myPlayer.currentTime())
       // if current player time is greater than the beginning of the next section,
       // IT'S GO TIME.
-      if (myPlayer.currentTime() > lines[l_i+1][1]) {
-        // you should move to the next section
+     // console.log(l_i)
+     // console.log(l_i+1)
 
+
+    myPlayer.volume = 0;
+    if (playing) 
+      myPlayer.play();
+  }
+}
+
+function loopCheck(){
+        console.log(processed_data[l_i+1][1]);
+      if (myPlayer.currentTime() > processed_data[l_i+1][1]) {
+        // you should move to the next section
+        console.log("NEXT SECTION!!!")
+        console.log("former section: "+l_i)
         // clear out whatever current shit is happening
 
         // then increment to next 
         l_i++;
 
+
+        console.log("next section: "+l_i)
         // LIFE BEGINS ANEW
         // it'd be nice to make a screen singleton class and use that instead of a million global variables
-        doShitForAction(lines[l_i][3]);
+        doShitForAction(processed_data[l_i][3]);
 
 
 
         // todo - when this hits the lenght of lines[]
 
       }
-    })
 
-
-    myPlayer.play();
-  }
 }
 
 function playSuccess(){
@@ -114,29 +143,31 @@ function playSuccess(){
 }
 
 function doShitForAction(action){
-  // yayyy a huge switch!
+
+
+
+ //text
+ var text = new createjs.Text(action, "30px Arial", "#1de209");
+ text.x = 4;//stageWidth/2 - text.getMeasuredWidth()/2;
+ text.y = 80;
+ stage.addChild(text);
+ stage.update();
+
+
 
   if (action=="UP" || action=="DOWN" || action=="LEFT" || action=="RIGHT") {
     // set a keypress listener for just the next timeToRespond seconds, otherwise KILL U
-  } else if (action=="START" || action=="FAIL" || action=="SUCCESS" || action.slice(0,9)=="CHECKPOINT")
-  switch(action)
-  {
-    case 'START':
-      break;
-    case 'UP':
-      $(document).keydown(function(e)) {
+    
+      $(document).keydown(function(e) {
         if (e.keyCode==38) {
           playSuccess();
         }
-      };
-      break;
-    case 'DOWN':
-      $(document).keydown(function(e)) {
-        if (e.keyCode==38) {
-          playSuccess();
-        }
-      };
-      break;
+      });
+  } else if (action=="START" || action=="FAIL" || action=="SUCCESS" || action.slice(0,9)=="CHECKPOINT") {
+
+    // DO NOTHING
+  } else {
+    //action is probably text!
   }
 
 }
@@ -200,13 +231,21 @@ function doShitForAction(action){
 
         // time will look something like: 00:00:14:34
         // FOR NOW it's ok to discard the first hour column 00: set
+
         var timeparts = String(time_str).split(':');
-        var hours = parseFloat(timeparts[0]);
+        var hours = parseFloat(time_str);
+    //    console.log(timeparts)
+    //    console.log("HI!!!")
         var minutes = parseFloat(timeparts[1]);
         var seconds = parseFloat(timeparts[2]);
         var ms = parseFloat(timeparts[3]);
+    //   console.log("ASKDFJAKLSJF")
+    //   console.log(hours);
+    //   console.log(minutes);
+    //   console.log(seconds);
+    //   console.log(ms);
 
-        var ret_seconds = (hours*3600)+(minutes*60)+(seconds)+(ms/60);
+        var ret_seconds = parseFloat((hours*3600)+(minutes*60)+(seconds)+(ms/100));
         return ret_seconds;
       }
 

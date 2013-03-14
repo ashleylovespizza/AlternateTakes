@@ -7,33 +7,48 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 
   <link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
-  <script src="http://vjs.zencdn.net/c/video.js"></script>
+  <script type="text/javascript" src="http://vjs.zencdn.net/c/video.js"></script>
+
+
+  <script type="text/javascript" src="http://code.createjs.com/createjs-2013.02.12.min.js">
+  </script>
+
+
   <script src="/main.js" type="text/javascript"></script>
 
 
   <style>
-    #video, #canvas {
+    #canvas {
       position: absolute;
-      top: 20px;
-      left: 20px;
+      top: 15;
+      left: 10;
+      border: 1px red solid;
+      z-index: 3000;
     }
     #main_video {
-      border: 1px red solid;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
     }
   </style>
 </head>
 
 <body>
   <div id="test">
+    <video id="main_video" class="video-js vjs-default-skin" width="720" height="480" poster="/videobg.jpg" preload="auto" data-setup="{}">
+    
+          <source src="/video_source/testmovie/testmovie.mp4" type='video/mp4'/>
+          <source src="/video_source/testmovie/testmovie.webm" type='video/webm'/>
+    
+    </video>
 
-<video id="main_video" class="video-js vjs-default-skin" width="720" height="480" poster="/videobg.jpg" preload="auto" data-setup="{}">
-  <source type="video/mp4" src="/video_source/testmovie/testmovie.mp4">
-  <source src="/video_source/testmovie/testmovie.webm" type='video/webm'>
-</video>
+
+
     <a id="restart" href="#">RESTART!</a>
-    <!--
+
     <canvas id="canvas" width="720" height="480"></canvas>
--->
+
   </div>
   
 </body>
