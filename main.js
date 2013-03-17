@@ -1,38 +1,46 @@
    // for now, just hardcode to load the testmovie
   //  var canvas, ctx, vid, vidTimer, text, myPlayer, datastr;
 
-    var canvas_id;
-    var stage;
-
+var reactionMS = 1000;
 var stageWidth = 720;
 var stageHeight = 480;
 var stage;
 var update = true;
 
-  var playing = true;
+// dev var for when we're palying shit
+var playing = true;
 
-    //video.js player
-    var myPlayer;
-    // datastr is the original data string imported from the text file
-    var datastr;
-    // this is the lines index -  current i of lines[] you're on
-    var l_i = -1;
-
-
-    var processed_data = new Array();
-
-
-
-    $(window).load(function() {
-
-      // canvas stuff
+// global to keep track of current action
+var curr_action = '';
+// when should failure happen?
+var failTime;
+//video.js player
+var myPlayer;
+// datastr is the original data string imported from the text file
+var datastr;
+// this is the lines index -  current i of lines[] you're on
+var l_i = -1;
+// holds audio for good and bad sounds
+var successAudio, failAudio;
 
 
-      stage = new createjs.Stage(document.getElementById("canvas"));
- 
+var processed_data = new Array();
+
+var actionKeyCodes = new Object();
+actionKeyCodes['UP'] = 38;
+actionKeyCodes['DOWN'] = 40;
+actionKeyCodes['RIGHT'] = 39;
+actionKeyCodes['LEFT'] = 37;
+actionKeyCodes['ACTION'] = 32; 
 
 
-      // load up the dang video
+
+    $(function() {
+
+      // assign stage variable for display shits
+      stage = $("#canvas");
+
+      // using videojs,  load up the dang video
       _V_("main_video").ready(function(){
         console.log("Asdf")
         myPlayer= this;
@@ -40,6 +48,29 @@ var update = true;
         triggerLoad();
       });
 
+      // create the audio entities
+      successAudio = document.getElementById('successSound');
+      failAudio = document.getElementById('failSound');
+
+
+
+  $(document).keydown(function(e) {
+    if (e.keyCode==actionKeyCodes[curr_action]) {
+      playSuccess();
+      curr_action = '';
+      console.log((actionKeyCodes[curr_action]))
+    } else if ((actionKeyCodes[curr_action])!= undefined){
+      playFailure();
+      curr_action = '';
+      stopActionPng();
+      clearInterval(video_interval);
+      myPlayer.currentTime(failTime);
+      // TODO: jump ahead to fail? or checkpoint? not sure. let's do fail!
+    }
+  });
+
+
+      // load up the json
       $.ajax({
         url: "/video_source/testmovie/testmovie.txt",
         async: false,
@@ -84,12 +115,13 @@ function triggerLoad(data) {
 
         var new_end_time = parseATFloat(lines[i][2]);
         lines[i][2] = new_end_time;
-        console.log("YO")
-        console.log(lines[i])
+
         // push individual line array to processed data array
         processed_data.push(lines[i]);
 
-        console.log(processed_data)
+        if (lines[i][3] == 'FAIL') {
+            failTime = lines[i][1];
+          }
       }
     }
     // empty out datastring
@@ -99,7 +131,7 @@ function triggerLoad(data) {
 
 //    myPlayer.addEvent("timeupdate", function(){
   
-    video_interval = setInterval(loopCheck, 150);
+    video_interval = setInterval(loopCheck, 50);
    //   console.log(myPlayer.currentTime())
       // if current player time is greater than the beginning of the next section,
       // IT'S GO TIME.
@@ -107,14 +139,15 @@ function triggerLoad(data) {
      // console.log(l_i+1)
 
 
-    myPlayer.volume = 0;
     if (playing) 
       myPlayer.play();
+
+    myPlayer.volume(0);
   }
 }
 
 function loopCheck(){
-        console.log(processed_data[l_i+1][1]);
+     //   console.log(processed_data[l_i+1][1]);
       if (myPlayer.currentTime() > processed_data[l_i+1][1]) {
         // you should move to the next section
         console.log("NEXT SECTION!!!")
@@ -140,34 +173,44 @@ function loopCheck(){
 
 function playSuccess(){
   // TODO play a nice sound for success
+  successAudio.play();
+}
+
+function playFailure(){
+  failAudio.play();
+}
+
+function stopActionPng(){
+  // whatever png is flashing in the canvas div (if any), stop that bitch
+  stage.html('');
 }
 
 function doShitForAction(action){
-
-
-
- //text
- var text = new createjs.Text(action, "30px Arial", "#1de209");
- text.x = 4;//stageWidth/2 - text.getMeasuredWidth()/2;
- text.y = 80;
- stage.addChild(text);
- stage.update();
-
-
-
-  if (action=="UP" || action=="DOWN" || action=="LEFT" || action=="RIGHT") {
-    // set a keypress listener for just the next timeToRespond seconds, otherwise KILL U
+  console.log("do shit for action "+action)
+  if (action=="UP" || action=="DOWN" || action=="LEFT" || action=="RIGHT" || action=="ACTION") {
     
-      $(document).keydown(function(e) {
-        if (e.keyCode==38) {
-          playSuccess();
-        }
-      });
-  } else if (action=="START" || action=="FAIL" || action=="SUCCESS" || action.slice(0,9)=="CHECKPOINT") {
+    curr_action = action;
 
+    //show appropriate doodle
+    stage.html("<img src='/images/"+action+".png'/>");
+
+    // set a keypress listener for just the next timeToRespond seconds, otherwise KILL U
+    var localKeyListenerInterval = setInterval(function(){
+      curr_action = '';
+      clearInterval(localKeyListenerInterval);
+      localKeyListenerInterval = null;
+    }, reactionMS);
+
+
+
+  } else if (action=="START" || action=="FAIL" || action=="SUCCESS" || action.slice(0,9)=="CHECKPOINT") {
     // DO NOTHING
+    curr_action = '';
   } else {
     //action is probably text!
+    curr_action = '';
+    stage.html(action);
+
   }
 
 }
