@@ -1,19 +1,24 @@
-define('Score', ['jquery', 'http://vjs.zencdn.net/c/video.js'], function($){
+define('Score', ['jquery'], function($){
 
-	var Score = function(scoreFile) {
-	
-		this.score_data = [];	
+	var Score = function(scoreFile) {	
 		// Score constructor
+	
+		this.score_data = [];
+		
 		this.loadFile(scoreFile);
-
+		
 	}
 
-	Score.prototype.test = function() {
-		console.log("f");
+
+	Score.prototype.scoreReady = function() {
+		return !!(this.score_data.length > 0);
 	}
 
-	Score.prototype.loadFile = function(scoreFile){
-	  
+	Score.prototype.play = function() {
+		// 
+	}
+
+	Score.prototype.loadFile = function(scoreFile){ 
 	  var self = this;
 
       // load up the json
@@ -37,7 +42,7 @@ define('Score', ['jquery', 'http://vjs.zencdn.net/c/video.js'], function($){
     		    self.score_data.push(lines[i]);
     		  }
     		}
-    		console.log(self.score_data);
+    		$(document).trigger('scoreReady');
         }
       });
 	};
@@ -64,6 +69,9 @@ define('Score', ['jquery', 'http://vjs.zencdn.net/c/video.js'], function($){
 
         return ret_seconds;
     }
+
+
+
 
     return Score;
 });
