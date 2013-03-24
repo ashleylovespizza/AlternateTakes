@@ -1,13 +1,26 @@
 define('Score', ['jquery'], function($){
 
-	var Score = function(scoreFile) {	
+	var instance = null;
+
+	var Score = function() {	
 		// Score constructor
 	
 		this.score_data = [];
-		
-		this.loadFile(scoreFile);
-		
+
+		if(instance !== null){
+            throw new Error("Cannot instantiate more than one MySingleton, use MySingleton.getInstance()");
+        } 
+        
 	}
+
+	Score.getInstance = function() {
+        // summary:
+        //      Gets an instance of the singleton. It is better to use 
+        if(instance === null){
+            instance = new Score();
+        }
+        return instance;
+    }
 
 
 	Score.prototype.scoreReady = function() {
@@ -73,5 +86,5 @@ define('Score', ['jquery'], function($){
 
 
 
-    return Score;
+    return Score.getInstance();
 });
