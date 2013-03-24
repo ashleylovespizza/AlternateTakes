@@ -3,23 +3,23 @@
 <html>
 <head>
   <title>ALTERNATE TAKES</title>
-
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-
   <link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
-  <script type="text/javascript" src="http://vjs.zencdn.net/c/video.js"></script>
+  <script data-main="scripts/main" src="scripts/require-jquery.js"></script>
 
-  <script src="/main.js" type="text/javascript"></script>
 
 
   <style>
+    body {
+      background-color: #000;
+    }
+
     #canvas {
       position: absolute;
       top: 0;
-      left: 0;
-      width: 720px;
-      height: 480px;
-      border: 1px red solid;
+      left: 50%;
+      margin-left: -640px;
+      width: 1100px;
+      height: 660px;
       z-index: 3000;
       text-align: center;
       color: #00ff00;
@@ -28,7 +28,7 @@
       font-size: 48px;
       letter-spacing: 2px;
       font-weight: bold;
-      padding-top: 80px;
+      padding: 180px 40px;
     }
 
     #canvas img {
@@ -38,7 +38,8 @@
     #main_video {
       position: absolute;
       top: 0;
-      left: 0;
+      left: 50%;
+      margin-left: -640px;
       z-index: 1;
     }
 
@@ -61,11 +62,12 @@
 
 <body>
   <div id="test">
-    <video id="main_video" class="video-js vjs-default-skin" width="720" height="480" poster="/videobg.jpg" preload="auto" data-setup="{}">
+    <video id="main_video" class="video-js vjs-default-skin" width="1280" height="720" poster="/videobg.jpg" preload="auto" data-setup="{}">
     
-          <source src="/video_source/testmovie/testmovie.mp4" type='video/mp4'/>
+        <!--  <source src="/video_source/testmovie/testmovie.mp4" type='video/mp4'/>
           <source src="/video_source/testmovie/testmovie.webm" type='video/webm'/>
-    
+        -->
+        <source src="/video_source/starwars_trashcompactor/starwars_trashcompactor.webm" type="video/webm"/>
     </video>
 
     <div id="canvas"></div>

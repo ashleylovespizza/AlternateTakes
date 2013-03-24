@@ -13,7 +13,7 @@ var playing = true;
 // global to keep track of current action
 var curr_action = '';
 // when should failure happen?
-var failTime;
+var failIndex;
 //video.js player
 var myPlayer;
 // datastr is the original data string imported from the text file
@@ -57,14 +57,10 @@ actionKeyCodes['ACTION'] = 32;
   $(document).keydown(function(e) {
     if (e.keyCode==actionKeyCodes[curr_action]) {
       playSuccess();
-      curr_action = '';
+      curr_action = 'YOUDIDIT';
       console.log((actionKeyCodes[curr_action]))
     } else if ((actionKeyCodes[curr_action])!= undefined){
-      playFailure();
-      curr_action = '';
-      stopActionPng();
-      clearInterval(video_interval);
-      myPlayer.currentTime(failTime);
+      youFailed();
       // TODO: jump ahead to fail? or checkpoint? not sure. let's do fail!
     }
   });
@@ -72,7 +68,7 @@ actionKeyCodes['ACTION'] = 32;
 
       // load up the json
       $.ajax({
-        url: "/video_source/testmovie/testmovie.txt",
+        url: "/video_source/starwars_trashcompactor/starwars_trashcompactor.txt",
         async: false,
         success: function(data) {
           datastr = new String(data);
@@ -120,7 +116,7 @@ function triggerLoad(data) {
         processed_data.push(lines[i]);
 
         if (lines[i][3] == 'FAIL') {
-            failTime = lines[i][1];
+            failIndex = processed_data.length -1;
           }
       }
     }
@@ -142,7 +138,7 @@ function triggerLoad(data) {
     if (playing) 
       myPlayer.play();
 
-    myPlayer.volume(0);
+//    myPlayer.volume(0);
   }
 }
 
@@ -180,6 +176,28 @@ function playFailure(){
   failAudio.play();
 }
 
+function youFailed(){
+  playFailure();
+  curr_action = '';
+  stopActionPng();
+  clearInterval(video_interval);
+  myPlayer.currentTime(processed_data[failIndex][1]);
+
+  
+
+  var delay = (processed_data[failIndex][2] - processed_data[failIndex][1]) * 1000;
+  console.log(delay);
+
+  var failTimeout = setInterval(function(){
+    clearInterval(failTimeout);
+    failTimeout = null;
+    myPlayer.pause();
+    myPlayer.currentTime(0);
+    stage.html("RELOAD TO START AGAIN :)")
+  }, delay);
+
+}
+
 function stopActionPng(){
   // whatever png is flashing in the canvas div (if any), stop that bitch
   stage.html('');
@@ -196,9 +214,16 @@ function doShitForAction(action){
 
     // set a keypress listener for just the next timeToRespond seconds, otherwise KILL U
     var localKeyListenerInterval = setInterval(function(){
-      curr_action = '';
-      clearInterval(localKeyListenerInterval);
-      localKeyListenerInterval = null;
+      if(curr_action != 'YOUDIDIT') {
+        // you actually failed, whoops
+        youFailed();
+        
+
+        } 
+        curr_action = '';
+        clearInterval(localKeyListenerInterval);
+        localKeyListenerInterval = null;
+      
     }, reactionMS);
 
 
@@ -209,6 +234,9 @@ function doShitForAction(action){
   } else {
     //action is probably text!
     curr_action = '';
+
+    action = action.replace (/"/g, "");
+
     stage.html(action);
 
   }
@@ -239,35 +267,6 @@ function doShitForAction(action){
       }
 
 
-      function waitForAction() {
-        console.log("WAIT FOR ACTION!")
-        // called once to set up the action listener when you move into the action part of the clip
-        $(document).keydown(function(evt){
-            if (evt.keyCode == 32) {
-              // you have pressed the spacebar, great jorb
-
-              //jump the video ahead to pass_start
-              clearInterval(vidTimer);
-              vidTimer = null;
-
-              currentSection = 4;
-              vid.currentTime = gameInfo['pass_start']; 
-
-              vidTimer = setInterval(checkStatus, 1000/30);
-            } else {
-              clearInterval(vidTimer);
-              vidTimer = null;
-
-              currentSection = 2;
-              vid.currentTime = gameInfo['fail_start']; 
-
-              vidTimer = setInterval(checkStatus, 1000/30);
-            }
-        })
-      }
-
-
-
       function parseATFloat(time_str) {
         // takes a string formatted from the text file, ie 00:00:01:77
         // and converts it to a javascript style time float
@@ -292,57 +291,7 @@ function doShitForAction(action){
         return ret_seconds;
       }
 
-      function checkStatus() {
-       //// console.log(vid.currentTime)
-       //// console.log(gameInfo[gameSections[currentSection]])
-       //// var wah = (parseFloat(vid.currentTime) > parseFloat(gameInfo[gameSections[currentSection]])/1000 );
-       //// console.log(wah);
-       var current_moment_in_vid = parseFloat(vid.currentTime);
-       var next_moment_to_be_aware_of = parseATFloat(processed_data[currentSection+1][1]);
-       console.log(current_moment_in_vid);
 
 
-        // you're moving beyond the current section, congratulations
-        if (parseFloat(vid.currentTime) > 10 ) {
-          
-          // are you at the end?
-          if (currentSection > gameSections.length-3) {
-            
-            // you're at the end man
-            // just like, don't set the timeout anymore, ok?
-            // eventually make it stop at the right moment.
-            if (vid.currentTime > (vid.duration-0.001)) {
-              endGame();
-            }
-
-          }
-          else if(currentSection == 0){
-            console.log("moving beyond the intro, yay!")
-            // moved beyond the intro, now in the ACTION area
-            currentSection++;
-            waitForAction();
-          } 
-          else if (currentSection == 1) {
-            // you didn't press a button in time >_<
-            // progress to FAILURE.
-            console.log("YOU MISSED THE BUTTON DUDE")
-            currentSection = 2;
-            //vid.currentTime = gameInfo[currentSection];
-
-          } 
-          else if (currentSection == 2) {
-            // you just failed.  end at the end of failure.
-            currentSection = 3;
-
-          }
-          else if (currentSection == 3){
-            // FAIL, PAUSE, DIE
-            endGame();
-          }
-        } else if (currentSection == 1) {
-            // you're currently looking for an action. for now let's just like, 
-            
-        }
 
 
-      }
