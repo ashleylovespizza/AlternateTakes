@@ -1,8 +1,9 @@
-require(["jquery", "Score", "Stage", "http://vjs.zencdn.net/c/video.js"], function($, Score, Stage) {
+require(["jquery", "Score", "Stage", "Level", "SelectScreen", "http://vjs.zencdn.net/c/video.js"], function($, Score, Stage, Level, SelectScreen) {
     $(function() {
-      Score.loadFile("/video_source/starwars_trashcompactor/starwars_trashcompactor.txt");
-      var stage = $('#stage').Stage();
 
+    //  var stage = $('#stage').Stage();
+    var c = $('#canvas')
+    	var stage = new Stage(c);
 
     });
 });

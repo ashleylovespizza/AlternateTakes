@@ -10,7 +10,9 @@ define('Score', ['jquery'], function($){
 		this.current_key_interval = null;
 
 		this.ACTION_COMMANDS = ['UP', 'DOWN', 'LEFT', 'RIGHT', 'ACTION'];
-		this.ACTION_DURATION = 1;
+
+		// maximum of how long you have to respond, in seconds
+		this.ACTION_DURATION = 0.5;
 		this.ACTION_KEYCODES = {
 			'UP':     38,
 			'DOWN':   40,
@@ -25,7 +27,34 @@ define('Score', ['jquery'], function($){
         } 
         
 	}
+/*
+	Score.prototype.waitForUser = function() {
+		//called when the video and score is fully loaded - invites user to hit spacebar to start
+		//
+		$(document).keydown($.proxy(this.keyPressed, this));
 
+		clearInterval(self.current_key_interval);
+		self.current_key_interval = null;
+
+
+		self.current_key_interval = setInterval(function(){
+			console.log("OVER NOW")
+			// get rid of self so this only fires once
+			clearInterval(self.current_key_interval);
+			self.current_key_interval = null;
+
+			// if key listener is still alive, you know you failed
+			if ($._data( $(document).get(0), "events" )['keydown'] != null) {
+				console.log("TOO LATE ASSHOLE");
+				$(document).trigger('command_failure');
+			}
+			//$(document).off('keypress');
+		}, time_diff);
+
+
+		$(document).trigger('actionCommand', [cue['command'], cue['begin'], cue['end']]);
+	}
+*/
 	Score.getInstance = function() {
         // summary:
         //      Gets an instance of the singleton. It is better to use 
@@ -66,14 +95,20 @@ define('Score', ['jquery'], function($){
 			var cue = this.score_data[this.current_score_section];
 
 			if($.inArray(cue['command'], this.ACTION_COMMANDS) > -1) {
-				console.log("section "+this.current_score_section+" needs you to press "+cue['command']+ ' within ' + this.ACTION_DURATION)
+				var time_diff = 1000 * Number(cue['end'] - cue['begin']);
+				console.log("section "+this.current_score_section+" needs you to press "+cue['command']+ ' within ' + time_diff)
 				// this section requires an action, how exciting!
 
 				// just handles if the correct button is pressed or not - only 'on' when it needs to be on
+				console.log("begin listening for THIS KEY: "+cue['command'])
     			$(document).keydown($.proxy(this.keyPressed, this));
 
+				clearInterval(self.current_key_interval);
+				self.current_key_interval = null;
+
+
 				self.current_key_interval = setInterval(function(){
-					console.log("THIS FIRED!!!!")
+					console.log("OVER NOW")
 					// get rid of self so this only fires once
 					clearInterval(self.current_key_interval);
 					self.current_key_interval = null;
@@ -84,7 +119,7 @@ define('Score', ['jquery'], function($){
 						$(document).trigger('command_failure');
 					}
 			    	//$(document).off('keypress');
-				}, (cue['end']*1000));
+				}, time_diff);
 
 
 				$(document).trigger('actionCommand', [cue['command'], cue['begin'], cue['end']]);
@@ -127,7 +162,7 @@ define('Score', ['jquery'], function($){
 
 	Score.prototype.keyPressed = function(e, data) {
 		$(document).off('keydown');
-	//	console.log("YOU PRESS A BUTTON !!!  "+e.keyCode)
+		console.log("YOU PRESS A BUTTON !!!  "+e.keyCode)
 		// checks if a key is appropriate and goes from there
 	//	console.log(this.score_data)
 	//	console.log("fuck a bug "+this.current_score_section)
@@ -144,6 +179,7 @@ define('Score', ['jquery'], function($){
 /*********************************** Helper functions *************************************************/
 
 	Score.prototype.processData = function(data) {
+		console.log("Score: processing data")
 		// takes in raw data from ajax load of text file
 		// processes and puts it into this.score_data array
 		// sets up video update listener
@@ -157,16 +193,26 @@ define('Score', ['jquery'], function($){
     	  	var cue = new Array();
 
     	    lines[i] = lines[i].split(/\t/);
+    	    next_line = lines[i+2].split(/\t/);
     	
     	    cue['command'] = lines[i][3];
 
     	    cue['begin'] = this.parseATFloat(lines[i][1]);
 
     	    var potential_end = this.parseATFloat(lines[i][2]);
+    	    var next_begin = this.parseATFloat(next_line[1]);
+    	 //   console.log("spider " + i+" tits: "+next_line)
+
     	    if ($.inArray(cue['command'], this.ACTION_COMMANDS) > -1) {
     	    	// end should be ACTION_DURATION after origin
-    	    	if (potential_end - Number(cue['begin']) < this.ACTION_DURATION) {
-					cue['end'] = potential_end;
+    	    //	console.log("next begin: "+next_begin);
+    	    //	console.log("current begin: "+Number(cue['begin']));
+    	    //	console.log("if THIS: "+Number(next_begin - Number(cue['begin'])));
+    	    //	console.log("is less than THIS: "+this.ACTION_DURATION);
+    	    //	console.log("we end here: "+Number(next_begin-0.01))
+
+    	    	if (next_begin - Number(cue['begin']) < this.ACTION_DURATION) {
+					cue['end'] = next_begin - .01;
     	    	} else {
 	    	    	cue['end'] = Number(cue['begin']) + this.ACTION_DURATION;
 	    	    }
