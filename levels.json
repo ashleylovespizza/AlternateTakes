@@ -1,0 +1,14 @@
+{
+    "levels": [
+        {
+            "level_number": 1,
+            "video_src": "/video_source/starwars_trashcompactor/starwars_trashcompactor.webm",
+            "data_src": "/video_source/starwars_trashcompactor/starwars_trashcompactor.txt"
+        },
+        {
+            "level_number": 2,
+            "video_src": "/video_source/starwars_deathstar/starwars_deathstar.mov",
+            "data_src": "/video_source/starwars_deathstar/starwars_deathstar.txt"
+        }
+    ]
+}

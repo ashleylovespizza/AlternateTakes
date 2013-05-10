@@ -27,34 +27,7 @@ define('Score', ['jquery'], function($){
         } 
         
 	}
-/*
-	Score.prototype.waitForUser = function() {
-		//called when the video and score is fully loaded - invites user to hit spacebar to start
-		//
-		$(document).keydown($.proxy(this.keyPressed, this));
 
-		clearInterval(self.current_key_interval);
-		self.current_key_interval = null;
-
-
-		self.current_key_interval = setInterval(function(){
-			console.log("OVER NOW")
-			// get rid of self so this only fires once
-			clearInterval(self.current_key_interval);
-			self.current_key_interval = null;
-
-			// if key listener is still alive, you know you failed
-			if ($._data( $(document).get(0), "events" )['keydown'] != null) {
-				console.log("TOO LATE ASSHOLE");
-				$(document).trigger('command_failure');
-			}
-			//$(document).off('keypress');
-		}, time_diff);
-
-
-		$(document).trigger('actionCommand', [cue['command'], cue['begin'], cue['end']]);
-	}
-*/
 	Score.getInstance = function() {
         // summary:
         //      Gets an instance of the singleton. It is better to use 
@@ -94,6 +67,7 @@ define('Score', ['jquery'], function($){
 
 			var cue = this.score_data[this.current_score_section];
 
+			// if it's a command - LEFT RIGHT UP DOWN ACTION
 			if($.inArray(cue['command'], this.ACTION_COMMANDS) > -1) {
 				var time_diff = 1000 * Number(cue['end'] - cue['begin']);
 				console.log("section "+this.current_score_section+" needs you to press "+cue['command']+ ' within ' + time_diff)
@@ -105,10 +79,10 @@ define('Score', ['jquery'], function($){
 
 				clearInterval(self.current_key_interval);
 				self.current_key_interval = null;
-
+				self.current_command_listener = cue['command']
 
 				self.current_key_interval = setInterval(function(){
-					console.log("OVER NOW")
+					console.log("OVER NOW for "+self.current_command_listener)
 					// get rid of self so this only fires once
 					clearInterval(self.current_key_interval);
 					self.current_key_interval = null;
@@ -145,7 +119,8 @@ define('Score', ['jquery'], function($){
 				// do nothing!
 			} else {
   			 	//action is probably text!
-  			 	$(document).trigger('textOn', [cue['command'].replace(/"/g, ""), cue['begin'], cue['end']]);
+// TEMP: remove this for debugging. it should be back though eventually
+//  			 	$(document).trigger('textOn', [cue['command'].replace(/"/g, ""), cue['begin'], cue['end']]);
 			
   			}
 

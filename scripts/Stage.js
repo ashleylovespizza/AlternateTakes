@@ -6,8 +6,19 @@ define('Stage', ['jquery', 'Score', 'Level', 'SelectScreen'], function($, Score,
 		this.overlay = canvas;
 		this.curr_score = 0;
 		this.curr_stage = canvas;
-		this.STAGE_ORDER = ['select', 'level1', 'level2', 'level3', 'finish']
+		this.STAGE_ORDER = ['select', 'level0', 'level1', 'level2', 'finish'];
 
+		this.STAGE_INFO = new Array();
+
+    	$.getJSON('levels.json', function(data){
+    	    $.each(data.levels[0], function(key, val){
+    	    //	this.STAGE_INFO[1] = this.
+    	    console.log("HI")
+    	    console.log(val)
+    	    console.log(key)
+    	    console.log(val);
+    	    })
+    	});
 
 		// begin listener for stageReturn - this is fired every time a given stage ends and has no directive
      //   $(document).on("gotoNextStage", Stage.gotoNextStage);
@@ -45,11 +56,11 @@ define('Stage', ['jquery', 'Score', 'Level', 'SelectScreen'], function($, Score,
 		} else {
 			// you just finished a level, bitchen
 			// let's send you back to select
-			self.gotoSelectScreen();
+			//self.gotoSelectScreen();
 			// TODO: send from level whether you died or lived to activate next level when you won
 
 			// TEMP: send you to level 1 man
-			//Stage.gotoLevel(1);
+			Stage.gotoLevel(1);
 		}
 
 	}
