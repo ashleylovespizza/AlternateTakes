@@ -1,4 +1,4 @@
-require(["jquery", "Score", "Stage", "Level", "SelectScreen", "http://vjs.zencdn.net/c/video.js"], function($, Score, Stage, Level, SelectScreen) {
+require(["jquery", "Score", "Stage", "SelectScreen", "Level", "http://vjs.zencdn.net/c/video.js"], function($, Score, Stage, SelectScreen, Level) {
     $(function() {
 
     //  var stage = $('#stage').Stage();

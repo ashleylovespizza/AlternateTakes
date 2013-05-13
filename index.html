@@ -30,6 +30,29 @@
       padding: 100px 0 0 0;
       z-index: 5;
     }
+    #select_screen {
+      position: absolute;
+
+      top: 0;
+      left: 50%;
+      margin-left: -640px;
+      width: 1280px;
+      height: 720px;
+      text-align: center;
+
+      font-family: Helvetica, Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+
+      z-index: 10;
+      display: none;
+      background:rgba(0,0,0,.6);
+
+      color: #f6ff00;
+      font-weight: normal;
+      font-size: 28px;
+      line-height: 1.5em;
+    }
 /*
     #canvas img {
       -webkit-animation: blink-action 1000ms ease;
@@ -50,11 +73,53 @@
       overflow-y: hidden;
     }
 
+    ul#selection {
+      margin-left: 120px;
+      text-align: left;
+      margin-top: 45px;
+      list-style: none;
+
+    }
+    ul#selection li {
+      margin-bottom: 15px;
+      padding-left: 55px;
+
+    }
+    ul#selection li.selected {
+      
+      background:url('/images/select_arrow.png') no-repeat left bottom;
+    }
+    ul#selection li.selected, ul#selection li.selected a, ul#selection li.selected a:hover {
+      font-weight: bold;
+      color: #00ff00;
+
+    }
+    ul#selection li a, ul#selection li a:hover {
+      text-decoration: none;
+      color: #f6ff00;
+    }
+
   </style>
 </head>
 
 <body>
   <div id="stage">
+
+    <div id="select_screen">
+
+        <p>Welcome to Alternate Takes</br>Please make a selection</p>
+
+        <ul id="selection">
+          <li class="selected"><a href="#">SAMPLE THINGER DOODLE</a></li>
+          <li><a href="#">SAMPLE THINGER DOODLE</a></li>
+          <li><a href="#">SAMPLE THINGER DOODLE</a></li>
+          <li><a href="#">SAMPLE THINGER DOODLE</a></li>
+        </ul>
+
+      
+    </div>
+    <div id="canvas"></div>
+
     <video id="main_video" class="video-js vjs-default-skin" width="1280" height="720" poster="/images/videobg.jpg" preload="auto" data-setup="{}">
         <!--  <source src="/video_source/testmovie/testmovie.mp4" type='video/mp4'/>
           <source src="/video_source/testmovie/testmovie.webm" type='video/webm'/>
@@ -63,8 +128,6 @@
         -->
     </video>
 
-
-    <div id="canvas"></div>
 
     <audio id="successSound" src="/sounds/success.wav" preload="auto"></audio>
     <audio id="failSound" src="/sounds/die.wav" preload="auto"></audio>

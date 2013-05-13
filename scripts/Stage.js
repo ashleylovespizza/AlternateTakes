@@ -1,4 +1,4 @@
-define('Stage', ['jquery', 'Score', 'Level', 'SelectScreen'], function($, Score, Level, SelectScreen){
+define('Stage', ['jquery', 'Score', 'SelectScreen', 'Level'], function($, Score, SelectScreen, Level){
 
 	var Stage = function(canvas) {
 		console.log("STAGE!!")
@@ -6,91 +6,45 @@ define('Stage', ['jquery', 'Score', 'Level', 'SelectScreen'], function($, Score,
 		this.overlay = canvas;
 		this.curr_score = 0;
 		this.curr_stage = canvas;
-		this.STAGE_ORDER = ['select', 'level0', 'level1', 'level2', 'finish'];
-
-		this.STAGE_INFO = new Array();
-
-    	$.getJSON('levels.json', function(data){
-    	    $.each(data.levels[0], function(key, val){
-    	    //	this.STAGE_INFO[1] = this.
-    	    console.log("HI")
-    	    console.log(val)
-    	    console.log(key)
-    	    console.log(val);
-    	    })
-    	});
+		this.STAGE_ORDER = ['level1', 'level2'];
 
 		// begin listener for stageReturn - this is fired every time a given stage ends and has no directive
      //   $(document).on("gotoNextStage", Stage.gotoNextStage);
 
 
-    	$(document).on("gotoNextStage", $.proxy(Stage.gotoNextStage, this));
+   // 	$(document).on("gotoNextStage", $.proxy(Stage.gotoNextStage, this));
+    //    $(this).trigger('gotoNextStage');
 
-        $(document).trigger('gotoNextStage');
-
+    	this.gotoSelectScreen();
+    //	this.gotoLevel(0);
 	}
 
-	Stage.gotoNextStage = function(e, data) {
+
+
+	Stage.prototype.gotoLevel = function(level) {
 		var self = this;
-		console.log("goto next stage")
+		self.clearStage();
 
-		// eventually this will be called either when a select screen has been called with a keypress
-		// or at the end of a level and it's just time to frickin move on
+		console.log(self.STAGE_ORDER)
+		var leveltype = String(self.STAGE_ORDER[level]);
 
-
-		// determine if you just chose a level
-		if (e.keyCode != null) {
-			// you just were in the select screen and called this as a keydown event
-			// goto the level you chose
-			$(document).off('keydown');
-			var levelchoice = STAGES[e.keyCode];
-
-			console.log("YOU chose this level !!!  "+e.keyCode)
-			// TEMP: be an idiot and just go to level 1 all the time
-			Stage.gotoLevel(levelchoice);
-
-			// NOTE in select, make sure you filter for just appropriate keycodes
-			// TODO like all of this
-
-
-		} else {
-			// you just finished a level, bitchen
-			// let's send you back to select
-			//self.gotoSelectScreen();
-			// TODO: send from level whether you died or lived to activate next level when you won
-
-			// TEMP: send you to level 1 man
-			Stage.gotoLevel(1);
-		}
-
+    	Score.loadFile("/levels/"+leveltype+"/"+leveltype+".txt");
+    	this.curr_stage = new Level(self.overlay, "levels/"+leveltype+"/"+leveltype+".webm");
 	}
 
 
-	Stage.gotoLevel = function(level) {
-		var self = this;
-		Stage.clearStage();
-		// TODO use level to actually find the appropriate txt and video files
-
-		// TEMP always load level 1
-    	Score.loadFile("/video_source/starwars_trashcompactor/starwars_trashcompactor.txt");
-    	this.curr_stage = new Level(self.overlay, "/video_source/starwars_trashcompactor/starwars_trashcompactor.webm");
-	}
-
-
-		
-		
-	Stage.clearStage = function(){
+	Stage.prototype.clearStage = function(){
 		this.curr_score = null;
 		this.curr_stage = null;
 	}
 
 
-	Stage.gotoSelectScreen = function(){
+	Stage.prototype.gotoSelectScreen = function(){
 		var self = this;
-		self.clear();
+		self.clearStage();
 
 		// called when it's damn appropriate to call it
-		curr_stage = new SelectScreen(self.overlay);
+		this.curr_stage = new SelectScreen(self.overlay);
 
 	}
 
@@ -99,4 +53,45 @@ define('Stage', ['jquery', 'Score', 'Level', 'SelectScreen'], function($, Score,
 
 	return Stage;
 
+
+//
+//	Stage.prototype.gotoNextStage = function(e, data) {
+///		var self = this;
+///		console.log("goto next stage")
+///
+///		// eventually this will be called either when a select screen has been called with a keypress
+///		// or at the end of a level and it's just time to frickin move on
+///
+///
+///		// determine if you just chose a level
+///		//if (e.keyCode != null) {
+///		//	// probably will never use this?
+///		//	// you just were in the select screen and called this as a keydown event
+		//	// goto the level you chose
+		//	$(document).off('keydown');
+		//	var levelchoice = STAGES[e.keyCode];
+////
+//		//	console.log("YOU chose this level !!!  "+e.keyCode)
+//		//	// TEMP: be an idiot and just go to level 1 all the time
+//		//	Stage.gotoLevel(levelchoice);
+////
+//		//	// NOTE in select, make sure you filter for just appropriate keycodes
+//		//	// TODO like all of this
+////
+////
+//		//} else {
+//			// you just finished a level, bitchen
+//			// let's send you back to select
+//			//self.gotoSelectScreen();
+//			// TODO: send from level whether you died or lived to activate next level when you won
+//
+//			// TEMP: send you to level 0 for select man
+//
+//			this.gotoLevel(0);
+//	//	}
+//
+//	}
+//
+		
+		
 });
