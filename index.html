@@ -11,6 +11,7 @@
   <style>
     body {
       background-color: #000;
+      overflow:hidden;
     }
 
     #canvas {
@@ -31,11 +32,14 @@
       z-index: 5;
     }
     #select_screen {
+      display: none;
+
       position: absolute;
 
       top: 0;
       left: 50%;
       margin-left: -640px;
+      padding-top: 50px;
       width: 1280px;
       height: 720px;
       text-align: center;
@@ -46,19 +50,14 @@
 
       z-index: 10;
       display: none;
-      background:rgba(0,0,0,.6);
+      background:rgba(0,0,0,.45);
 
       color: #f6ff00;
       font-weight: normal;
       font-size: 28px;
       line-height: 1.5em;
     }
-/*
-    #canvas img {
-      -webkit-animation: blink-action 1000ms ease;
-      -webkit-animation-fill-mode: forwards;
 
-    }*/
 
     #main_video {
       position: absolute;
@@ -86,13 +85,13 @@
 
     }
     ul#selection li.selected {
-      
+
       background:url('/images/select_arrow.png') no-repeat left bottom;
     }
     ul#selection li.selected, ul#selection li.selected a, ul#selection li.selected a:hover {
       font-weight: bold;
       color: #00ff00;
-
+      cursor: default;
     }
     ul#selection li a, ul#selection li a:hover {
       text-decoration: none;
@@ -110,17 +109,15 @@
         <p>Welcome to Alternate Takes</br>Please make a selection</p>
 
         <ul id="selection">
-          <li class="selected"><a href="#">SAMPLE THINGER DOODLE</a></li>
-          <li><a href="#">SAMPLE THINGER DOODLE</a></li>
-          <li><a href="#">SAMPLE THINGER DOODLE</a></li>
-          <li><a href="#">SAMPLE THINGER DOODLE</a></li>
+          <li class="selected"><a level="0">Star Wars: Mashin'</a></li>
+          <li><a level="1">Star Wars: In Da Hole</a></li>
         </ul>
 
       
     </div>
     <div id="canvas"></div>
 
-    <video id="main_video" class="video-js vjs-default-skin" width="1280" height="720" poster="/images/videobg.jpg" preload="auto" data-setup="{}">
+    <video id="main_video" class="video-js vjs-default-skin" width="1280" height="720" poster="/images/videobg.jpg" preload="auto" data-setup="{}" autoplay loop>
         <!--  <source src="/video_source/testmovie/testmovie.mp4" type='video/mp4'/>
           <source src="/video_source/testmovie/testmovie.webm" type='video/webm'/>
         <source src="/video_source/starwars_trashcompactor/starwars_trashcompactor.webm" type="video/webm"/>

@@ -75,6 +75,8 @@ define('Score', ['jquery'], function($){
 
 				// just handles if the correct button is pressed or not - only 'on' when it needs to be on
 				console.log("begin listening for THIS KEY: "+cue['command'])
+
+				//TODO - maybe move this to happen just once?
     			$(document).keydown($.proxy(this.keyPressed, this));
 
 				clearInterval(self.current_key_interval);
@@ -119,8 +121,7 @@ define('Score', ['jquery'], function($){
 				// do nothing!
 			} else {
   			 	//action is probably text!
-// TEMP: remove this for debugging. it should be back though eventually
-//  			 	$(document).trigger('textOn', [cue['command'].replace(/"/g, ""), cue['begin'], cue['end']]);
+ 			 	$(document).trigger('textOn', [cue['command'].replace(/"/g, ""), cue['begin'], cue['end']]);
 			
   			}
 

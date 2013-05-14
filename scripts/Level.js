@@ -58,7 +58,7 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 				clearInterval(fail_i);
 				console.log("PAuse this betch")
 				// restart game
-				$(document).trigger('restart');
+				$(document).trigger('back_to_select');
 				self.video.pause();
 			}, (fail_end - fail_begin)*1000);
      	});
@@ -72,7 +72,7 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 			var success_i = setInterval(function(){
 				clearInterval(success_i);
 				// restart game
-				$(document).trigger('restart');
+				$(document).trigger('back_to_select');
 				self.video.pause();
 			}, (success_end - success_begin)*1000);
      	});
