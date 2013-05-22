@@ -24,8 +24,7 @@ define('Score', ['jquery'], function($){
 
 		if(instance !== null){
             throw new Error("Cannot instantiate more than one Score, use Score.getInstance()");
-        } 
-        
+        }         
 	}
 
 	Score.getInstance = function() {
@@ -57,11 +56,11 @@ define('Score', ['jquery'], function($){
 		// 
 	}
 
-	Score.prototype.update = function(e, data) {
+	Score.prototype.update = function(e, video_time) {
 		// run every on every video update
 		var self = this;
 
-		if (data > this.score_data[this.current_score_section+1]['begin']) {
+		if (video_time > this.score_data[this.current_score_section+1]['begin']) {
 			// move to next section!
 			this.current_score_section++;
 
@@ -69,6 +68,7 @@ define('Score', ['jquery'], function($){
 
 			// if it's a command - LEFT RIGHT UP DOWN ACTION
 			if($.inArray(cue['command'], this.ACTION_COMMANDS) > -1) {
+
 				var time_diff = 1000 * Number(cue['end'] - cue['begin']);
 				console.log("section "+this.current_score_section+" needs you to press "+cue['command']+ ' within ' + time_diff)
 				// this section requires an action, how exciting!
@@ -81,7 +81,7 @@ define('Score', ['jquery'], function($){
 
 				clearInterval(self.current_key_interval);
 				self.current_key_interval = null;
-				self.current_command_listener = cue['command']
+				self.current_command_listener = cue['command'];
 
 				self.current_key_interval = setInterval(function(){
 					console.log("OVER NOW for "+self.current_command_listener)
@@ -142,9 +142,11 @@ define('Score', ['jquery'], function($){
 		// checks if a key is appropriate and goes from there
 	//	console.log(this.score_data)
 	//	console.log("fuck a bug "+this.current_score_section)
+
 		var curr_action = this.score_data[this.current_score_section]['command'];
 	//	console.log("ucrr action "+curr_action)
 	//	console.log("SAMESIES?? "+this.ACTION_KEYCODES[curr_action])
+	
 		if (e.keyCode == this.ACTION_KEYCODES[curr_action]) {
 			$(document).trigger('command_success', curr_action);
     	} else { // if ((this.ACTION_KEYCODES[curr_action])!= undefined){
@@ -249,9 +251,6 @@ define('Score', ['jquery'], function($){
 
         // time will look something like: 00:00:14:34
         // FOR NOW it's ok to discard the first hour column 00: set
-
-
-
         var timeparts = String(time_str).split(':');
         var hours = parseFloat(time_str);
         var minutes = parseFloat(timeparts[1]);

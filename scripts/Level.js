@@ -6,7 +6,6 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 
 		// text/overlay
 		this.overlay = $('#canvas');
-	//	this.overlay_text = $("#canvas").append("<p><p")
 	
      	// audio
      	this.successAudio = $('#successSound').get(0);
@@ -14,11 +13,6 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 		
 		this.video = null;
 		this.video_reference = null;
-		//if ($("#main_video").length < 1) {
-		//	$("#main_video").remove();
-		//}
-		//$('.video_holder').append('<video id="main_video" class="video-js vjs-default-skin" width="1280" height="720" preload="auto" data-setup="{}" autoplay loop></video>');
-		
 
 	
 		// begin listener for actionCommand - this is fired every time you begin a new section
@@ -50,16 +44,15 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 
 
      	$(document).on("command_success", function(e, curr_command){
-     		console.log('YOU DID IT')
+     		console.log('YOU DID IT');
 
 		    self.overlay.html("<img src='/images/"+curr_command+"_success.png'/>");
- //   		self.overlay.html('');
      		self.successAudio.currentTime = 0;
 	  		self.successAudio.play();
      	});
 	
      	$(document).on("command_goaway", function(e, curr_command){
-     		console.log('get shit off the screen')
+     		console.log('get shit off the screen');
 
 		    self.overlay.html("");
      	});
@@ -84,6 +77,7 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 				fail_image = null;
 				clearInterval(fail_i);
 				fail_i = null;
+
 				self.resetLevel();
 				// restart game
 				$(document).trigger('back_to_select');

@@ -2,7 +2,7 @@ require(["jquery", "Score", "Stage", "SelectScreen", "Level", "http://vjs.zencdn
     $(function() {
 
     //  var stage = $('#stage').Stage();
-    var c = $('#canvas')
+    	var c = $('#canvas');
     	var stage = new Stage(c);
 
     });
