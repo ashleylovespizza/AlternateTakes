@@ -88,6 +88,7 @@ define('Score', ['jquery'], function($){
 					// get rid of self so this only fires once
 					clearInterval(self.current_key_interval);
 					self.current_key_interval = null;
+					$(document).trigger('command_goaway');
 
 					// if key listener is still alive, you know you failed
 					if ($._data( $(document).get(0), "events" )['keydown'] != null) {
@@ -145,7 +146,7 @@ define('Score', ['jquery'], function($){
 	//	console.log("ucrr action "+curr_action)
 	//	console.log("SAMESIES?? "+this.ACTION_KEYCODES[curr_action])
 		if (e.keyCode == this.ACTION_KEYCODES[curr_action]) {
-			$(document).trigger('command_success');
+			$(document).trigger('command_success', curr_action);
     	} else { // if ((this.ACTION_KEYCODES[curr_action])!= undefined){
 			$(document).trigger('command_failure');
 		}
@@ -201,6 +202,7 @@ define('Score', ['jquery'], function($){
     	    //	console.log("is less than THIS: "+this.ACTION_DURATION);
     	    //	console.log("we end here: "+Number(next_begin-0.01))
 
+    	    	//ACTION_DURATION is the maximum amount of time allowed
     	    	if (next_begin - Number(cue['begin']) < this.ACTION_DURATION) {
 					cue['end'] = next_begin - .01;
     	    	} else {
@@ -247,6 +249,8 @@ define('Score', ['jquery'], function($){
 
         // time will look something like: 00:00:14:34
         // FOR NOW it's ok to discard the first hour column 00: set
+
+
 
         var timeparts = String(time_str).split(':');
         var hours = parseFloat(time_str);

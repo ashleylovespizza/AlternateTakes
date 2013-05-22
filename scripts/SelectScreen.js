@@ -15,7 +15,7 @@ define('SelectScreen', ['jquery', 'Score', 'Stage', 'http://vjs.zencdn.net/c/vid
 		this.video_reference = _V_("main_video").ready(function(){
      		self.video = this;
 
-     		self.video.volume(.3);
+     		self.video.volume(.2);
 
 			self.video.src(movie_file_name);
 			this.play();

@@ -31,7 +31,7 @@ define('Stage', ['jquery', 'Score', 'SelectScreen', 'Level'], function($, Score,
 		var leveltype = String(self.STAGE_ORDER[level]);
 
     	Score.loadFile("/levels/"+leveltype+"/"+leveltype+".txt");
-    	this.curr_stage = new Level(self.overlay, "levels/"+leveltype+"/"+leveltype+".webm");
+    	this.curr_stage = new Level(self.overlay, "levels/"+leveltype+"/"+leveltype+".mp4");
 	}
 
 

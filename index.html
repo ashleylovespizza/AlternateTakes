@@ -13,7 +13,7 @@
       background-color: #000;
       overflow:hidden;
     }
-
+  
     #canvas {
       position: absolute;
       top: 0;
@@ -97,21 +97,38 @@
       text-decoration: none;
       color: #f6ff00;
     }
+    
 
+    #confidential {
+      position: absolute;
+      font-family: Helvetica, Verdana, sans-serif;
+      z-index: 999;
+      bottom: 10px;
+      right: 10px;
+      color: #fff;
+    }
+      #confidential a {
+        color: #fff;
+      }
+
+    #preload {
+      opacity: 0;
+    }
   </style>
 </head>
 
 <body>
+  <div id="confidential">
+    Confidential - please don't link or share!  Thanks!  - <a href="mailto:robotkid2000@gmail.com">Josh</a> and <a href="mailto:aholtgraver@gmail.com">Ashley</a>
+  </div>
   <div id="stage">
 
     <div id="select_screen">
-
-        <p>Welcome to Alternate Takes</br>Please make a selection</p>
+        <img src="/images/alternate_takes_logo.png" alt="Alternate Takes"/>
 
         <ul id="selection">
           <li class="selected"><a level="0">Star Wars: Mashin'</a></li>
           <li><a level="1">Star Wars: In Da Hole</a></li>
-          <li><a level="2">TEST</a></li>
         </ul>
 
       
@@ -120,14 +137,28 @@
 
 
     <div id="canvas"></div>
-    <video id="main_video" class="video-js vjs-default-skin" width="1280" height="720" poster="/images/videobg.jpg" preload="auto" data-setup="{}" autoplay loop>
-      
-      
-    </video>
+    <video id="main_video" class="video-js vjs-default-skin" width="1280" height="720" poster="/images/videobg.jpg" preload="auto" data-setup="{}" autoplay loop></video>
 
     <audio id="successSound" src="/sounds/success.wav" preload="auto"></audio>
     <audio id="failSound" src="/sounds/die.wav" preload="auto"></audio>
 
+
+    <div id="preload">
+      <img src="/images/ACTION.png"/>
+      <img src="/images/ACTION_success.png"/>
+
+      <img src="/images/LEFT.png"/>
+      <img src="/images/LEFT_success.png"/>
+
+      <img src="/images/RIGHT.png"/>
+      <img src="/images/RIGHT_success.png"/>
+
+      <img src="/images/UP.png"/>
+      <img src="/images/UP_success.png"/>
+
+      <img src="/images/DOWN.png"/>
+      <img src="/images/DOWN_success.png"/>
+    </div>
 
   </div>
 </body>

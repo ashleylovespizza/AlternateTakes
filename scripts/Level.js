@@ -6,6 +6,7 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 
 		// text/overlay
 		this.overlay = $('#canvas');
+	//	this.overlay_text = $("#canvas").append("<p><p")
 	
      	// audio
      	this.successAudio = $('#successSound').get(0);
@@ -28,7 +29,7 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
      	this.video_reference = _V_("main_video").ready(function(){
      		self.video = this;
 
-     		self.video.volume(.3);
+     		self.video.volume(.5);
 
 			self.video.src(movie_file_name);
 
@@ -48,21 +49,41 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
      	});
 
 
-     	$(document).on("command_success", function(e){
+     	$(document).on("command_success", function(e, curr_command){
      		console.log('YOU DID IT')
-     		self.overlay.html('');
+
+		    self.overlay.html("<img src='/images/"+curr_command+"_success.png'/>");
+ //   		self.overlay.html('');
      		self.successAudio.currentTime = 0;
 	  		self.successAudio.play();
      	});
 	
+     	$(document).on("command_goaway", function(e, curr_command){
+     		console.log('get shit off the screen')
+
+		    self.overlay.html("");
+     	});
+	
+
+
      	$(document).on("video_failure", function(e, fail_begin, fail_end){
 	     	self.failAudio.play();
 	     	console.log("fail.")
-     		self.overlay.html('');
+   // 		self.overlay.html('');
+		    self.overlay.html("<img src='/images/FAIL.png'/>");
 			self.video.currentTime(fail_begin);
 
+			var fail_image = setInterval(function(){
+				clearInterval(fail_image);
+				fail_image = null;
+		   		self.overlay.html("");
+			}, 1400);
+
 			var fail_i = setInterval(function(){
+				clearInterval(fail_image);
+				fail_image = null;
 				clearInterval(fail_i);
+				fail_i = null;
 				self.resetLevel();
 				// restart game
 				$(document).trigger('back_to_select');
@@ -100,7 +121,7 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 	}
 
 	Level.prototype.resetLevel = function() {
-
+		this.overlay.html('');
 		this.video.pause();
 		$(document).off("actionCommand");
 		$(document).off("command_success");
