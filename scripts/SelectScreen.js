@@ -8,11 +8,14 @@ define('SelectScreen', ['jquery', 'Score', 'Stage', 'http://vjs.zencdn.net/c/vid
 		this.stage = stage_ref;
 
 		var movie_file_name = "/levels/selection_bg.mp4"
+		this.video = null;
+		this.video_reference = null;
+		
 
-		_V_("main_video").ready(function(){
+		this.video_reference = _V_("main_video").ready(function(){
      		self.video = this;
 
-     		self.video.volume(.1);
+     		self.video.volume(.3);
 
 			self.video.src(movie_file_name);
 			this.play();
@@ -56,7 +59,8 @@ define('SelectScreen', ['jquery', 'Score', 'Stage', 'http://vjs.zencdn.net/c/vid
 	};
 	SelectScreen.prototype.clearOut = function() {
 		$(document).off("keydown");
-		
+		this.video_reference = null;
+		//$("#main_video").remove();
 		$("#select_screen").css("display", "none");
 	}
 	return SelectScreen;

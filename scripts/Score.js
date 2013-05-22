@@ -131,7 +131,6 @@ define('Score', ['jquery'], function($){
 
 
 
-
 	Score.prototype.scoreReady = function() {
 		return !!(this.score_data.length > 0);
 	}
@@ -151,6 +150,21 @@ define('Score', ['jquery'], function($){
 			$(document).trigger('command_failure');
 		}
 	};
+
+
+
+
+	Score.prototype.clearScore = function() {
+
+		this.score_data = [];
+		this.current_score_section = -1;
+		this.current_key_interval = null;
+
+    	$(document).off("videoTimeUpdate");
+        $(document).off("command_failure");
+	}
+
+
 
 /*********************************** Helper functions *************************************************/
 

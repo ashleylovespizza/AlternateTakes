@@ -12,24 +12,31 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
      	this.failAudio = $('#failSound').get(0);
 		
 		this.video = null;
+		this.video_reference = null;
+		//if ($("#main_video").length < 1) {
+		//	$("#main_video").remove();
+		//}
+		//$('.video_holder').append('<video id="main_video" class="video-js vjs-default-skin" width="1280" height="720" preload="auto" data-setup="{}" autoplay loop></video>');
+		
+
 	
 		// begin listener for actionCommand - this is fired every time you begin a new section
      	$(document).on("actionCommand", $.proxy(this.commandEventFired, this));
 	
      	// using videojs,  load up the dang video
      	// TODO: make sure you're using the movie_file_name for this shit, and not just the "main_video" _V_ object
-     	_V_("main_video").ready(function(){
+     	this.video_reference = _V_("main_video").ready(function(){
      		self.video = this;
 
-     		self.video.volume(1);
+     		self.video.volume(.3);
 
 			self.video.src(movie_file_name);
 
      		// listen for every moment the video is updated and broadcast that happening
      		self.video.addEvent("timeupdate", function(e) {
-     			var curr_time = self.video.currentTime();
-     			$(document).trigger("videoTimeUpdate", curr_time);
-     		})
+    			var curr_time = self.video.currentTime();
+    			$(document).trigger("videoTimeUpdate", curr_time);
+    		})
 
 
 
@@ -56,10 +63,9 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 
 			var fail_i = setInterval(function(){
 				clearInterval(fail_i);
-				console.log("PAuse this betch")
+				self.resetLevel();
 				// restart game
 				$(document).trigger('back_to_select');
-				self.video.pause();
 			}, (fail_end - fail_begin)*1000);
      	});
 
@@ -71,9 +77,9 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 
 			var success_i = setInterval(function(){
 				clearInterval(success_i);
+				self.resetLevel();
 				// restart game
 				$(document).trigger('back_to_select');
-				self.video.pause();
 			}, (success_end - success_begin)*1000);
      	});
 
@@ -92,6 +98,21 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 
 
 	}
+
+	Level.prototype.resetLevel = function() {
+
+		this.video.pause();
+		$(document).off("actionCommand");
+		$(document).off("command_success");
+		$(document).off("video_failure");
+		$(document).off("video_success");
+		$(document).off("textOn");
+
+		self.video_reference = null;
+	//	$("#main_video").remove();
+	}
+
+
 
 	Level.prototype.commandEventFired = function(e, command, begin, end) {
   		// command is in UP/DOWN/LEFT/RIGHT/ACTION

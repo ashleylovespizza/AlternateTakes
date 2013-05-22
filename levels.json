@@ -9,6 +9,11 @@
             "level_number": 2,
             "video_src": "/video_source/starwars_deathstar/starwars_deathstar.mov",
             "data_src": "/video_source/starwars_deathstar/starwars_deathstar.txt"
+        },
+        {
+            "level_number": 3,
+            "video_src": "/video_source/starwars_deathstar/starwars_deathstar.mov",
+            "data_src": "/video_source/starwars_deathstar/starwars_deathstar.txt"
         }
     ]
 }
