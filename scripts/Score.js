@@ -60,6 +60,8 @@ define('Score', ['jquery'], function($){
 		// run every on every video update
 		var self = this;
 
+		console.log(video_time);
+
 		if (video_time > this.score_data[this.current_score_section+1]['begin']) {
 			// move to next section!
 			this.current_score_section++;
@@ -146,7 +148,7 @@ define('Score', ['jquery'], function($){
 		var curr_action = this.score_data[this.current_score_section]['command'];
 	//	console.log("ucrr action "+curr_action)
 	//	console.log("SAMESIES?? "+this.ACTION_KEYCODES[curr_action])
-	
+
 		if (e.keyCode == this.ACTION_KEYCODES[curr_action]) {
 			$(document).trigger('command_success', curr_action);
     	} else { // if ((this.ACTION_KEYCODES[curr_action])!= undefined){

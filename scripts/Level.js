@@ -14,6 +14,8 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 		this.video = null;
 		this.video_reference = null;
 
+		this.video_interval = null;
+
 	
 		// begin listener for actionCommand - this is fired every time you begin a new section
      	$(document).on("actionCommand", $.proxy(this.commandEventFired, this));
@@ -28,11 +30,15 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 			self.video.src(movie_file_name);
 
      		// listen for every moment the video is updated and broadcast that happening
-     		self.video.addEvent("timeupdate", function(e) {
+     		/*self.video.addEvent("timeupdate", function(e) {
     			var curr_time = self.video.currentTime();
     			$(document).trigger("videoTimeUpdate", curr_time);
     		})
-
+			*/
+			self.video_interval = setInterval(function(){
+    			var curr_time = self.video.currentTime();
+    			$(document).trigger("videoTimeUpdate", curr_time);
+			}, 40);
 
 
 			if(Score.scoreReady()) {
@@ -117,6 +123,8 @@ define('Level', ['jquery', 'Score', 'http://vjs.zencdn.net/c/video.js'], functio
 	Level.prototype.resetLevel = function() {
 		this.overlay.html('');
 		this.video.pause();
+		clearInterval(self.video_interval);
+		self.video_interval = null;
 		$(document).off("actionCommand");
 		$(document).off("command_success");
 		$(document).off("video_failure");
